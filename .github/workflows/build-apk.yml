@@ -1,0 +1,83 @@
+name: Build AvatarBot Android v0.17 from ZIP
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'AvatarBot_Android_Native_v0.17_AuthGuard_Source.zip'
+      - '.github/workflows/build-apk.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  android-debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source archive
+        run: |
+          set -euo pipefail
+          test -s AvatarBot_Android_Native_v0.17_AuthGuard_Source.zip
+          unzip -t AvatarBot_Android_Native_v0.17_AuthGuard_Source.zip | tail -1
+          mkdir -p extracted
+          unzip -q AvatarBot_Android_Native_v0.17_AuthGuard_Source.zip -d extracted
+          test -f extracted/android/app/build.gradle.kts
+          test -f extracted/android/app/libs/bot2x-headless.jar
+          test -f extracted/tools/verify_legacy.sh
+          test -f extracted/go-mobilecore/go.mod
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: extracted/go-mobilecore/go.mod
+      - name: Offline verification
+        working-directory: extracted
+        run: |
+          set -euo pipefail
+          bash tools/verify_legacy.sh
+          bash tools/verify_offline.sh
+          (cd go-mobilecore && go test ./...)
+      - name: Install Android SDK 35
+        shell: bash
+        run: |
+          set -euo pipefail
+          ANDROID_HOME="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> "$GITHUB_ENV"
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort -V | tail -1)
+          test -n "$SDKMANAGER"
+          yes | "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --licenses >/dev/null || true
+          "$SDKMANAGER" --sdk_root="$ANDROID_HOME" --install 'platforms;android-35' 'build-tools;35.0.0'
+          test -f "$ANDROID_HOME/platforms/android-35/android.jar"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Compile APK
+        working-directory: extracted/android
+        shell: bash
+        run: |
+          set -euo pipefail
+          gradle wrapper --gradle-version 8.9
+          ./gradlew --no-daemon --stacktrace assembleDebug 2>&1 | tee ../../android-build.log
+          test -s app/build/outputs/apk/debug/app-debug.apk
+          (cd app/build/outputs/apk/debug && sha256sum app-debug.apk > app-debug.apk.sha256)
+      - name: Upload build errors
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: avatarbot-build-errors
+          path: android-build.log
+          if-no-files-found: ignore
+      - name: Upload installable debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: avatarbot-v017-debug-apk
+          path: |
+            extracted/android/app/build/outputs/apk/debug/app-debug.apk
+            extracted/android/app/build/outputs/apk/debug/app-debug.apk.sha256
+          if-no-files-found: error
+          retention-days: 14
