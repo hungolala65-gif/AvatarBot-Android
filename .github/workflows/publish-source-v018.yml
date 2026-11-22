@@ -1,0 +1,52 @@
+name: Publish full v0.18 Android source branch
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/publish-source-v018.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize-source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Validate and reconstruct original project and v0.18 changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s AvatarBot_Android_Native_v0.17_AuthGuard_Source.zip
+          unzip -t AvatarBot_Android_Native_v0.17_AuthGuard_Source.zip | tail -1
+          mkdir -p extracted
+          unzip -q AvatarBot_Android_Native_v0.17_AuthGuard_Source.zip -d extracted
+          python3 - <<'PY'
+          import pathlib,base64,zlib
+          encoded=pathlib.Path('patches/v0.18.patch.zlib.b64').read_text().strip()
+          pathlib.Path('v018.patch').write_bytes(zlib.decompress(base64.b64decode(encoded,validate=True)))
+          PY
+          (cd extracted && patch -p1 --fuzz=0 < ../v018.patch)
+          test -f extracted/tools/legacy-tests/FarmTradingV18Test.java
+          grep -F 'versionName = "0.18.0"' extracted/android/app/build.gradle.kts
+      - name: Commit inspectable full code to source-v0.18 branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --heads origin source-v0.18 >/dev/null; then
+            echo 'source-v0.18 already exists; refusing to overwrite user changes'
+            exit 0
+          fi
+          git switch -c source-v0.18
+          cp -a extracted/android extracted/go-mobilecore extracted/tools extracted/docs .
+          cp extracted/README.md README_SOURCE_V018.md
+          cp extracted/NOTICE.txt NOTICE_SOURCE_V018.txt
+          cp extracted/.gitignore .gitignore
+          git add android go-mobilecore tools docs README_SOURCE_V018.md NOTICE_SOURCE_V018.txt .gitignore
+          git config user.name 'AvatarBot CI'
+          git config user.email 'actions@users.noreply.github.com'
+          git commit -m 'Materialize complete inspectable AvatarBot Android v0.18 source'
+          git push --set-upstream origin source-v0.18
