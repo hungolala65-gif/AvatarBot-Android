@@ -1,0 +1,23 @@
+AvatarBot Android Native v0.5 — offline verification (2026-11-20)
+Source: v0.4 project + v0.5 ticketed start/stop fixes and SOCKS5 auth timeout
+
+PASS: Go mobilecore go test -race ./...
+PASS: Go mobilecore go vet ./...
+PASS: Go mobilecore CGO_ENABLED=0 GOOS=android GOARCH=arm64 go build ./...
+PASS: Kotlin AccountImporter: 8 checks
+PASS: Kotlin direct TCP / invalid endpoint / authenticated SOCKS5 fake server
+PASS: Kotlin PSI syntax on 7 Kotlin source files (NOT a semantic Android build)
+PASS: original-JAR bytecode comparison: 50/50 headless classes exactly match supplied JAR
+PASS: legacy JAR offline assertions (44), fake handshake/login, fake LoginFail
+PASS: Java ME RMS snapshot roundtrip (8 assertions)
+PASS: stop closes blocked live socket, denied connection after revoke
+PASS: start reservation and stop-in-flight: stale ticket rejected
+PASS: stale async launch failure cannot overwrite a fresh reservation
+PASS: silent SOCKS5 proxy negotiation interrupted by Stop
+PASS: mode mapping, Fish/Diamond not silently changed to Farm
+PASS: AndroidManifest XML parsed as well-formed XML
+
+NOT EXECUTED: Android Gradle :app:assembleDebug
+REASON: No Android SDK, Gradle executable, or Google/Maven network DNS in execution environment.
+NOT VERIFIED: installable APK; Android Compose semantic compilation; live device runtime; game server login/Auto operations.
+The v0.5 ZIP is SOURCE CODE; it must not be renamed or represented as an APK.

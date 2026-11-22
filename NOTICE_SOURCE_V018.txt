@@ -1,0 +1,4 @@
+This project contains newly written scaffold code and analysis-derived interface names.
+It does not include the original AvatarBot Go backend or repackage its Windows/Linux executables.
+No claim of ownership of original AvatarBot game/application or its binary code is made.
+Original software rights, license, and game access rules need separate verification.

@@ -1,0 +1,19 @@
+AvatarBot Android Native v0.3 — TEST SUMMARY
+Source: user-supplied Bot2X-SuperLite.jar (60 classes, 50 headless packaged)
+
+PASS: Java JAR Config/PacketReader/PacketWriter/Payloads/Opcode smoke tests
+PASS: local mock TCP key handshake and bidirectional XOR encrypted frames
+PASS: local mock SOCKS5 proxy, no authentication
+PASS: local mock SOCKS5 proxy, username/password
+PASS: allowed game endpoint enforced, unexpected endpoints blocked
+PASS: 41 offline assertions
+PASS: JAR Bot.connectLogin against local fake server:
+      4 bootstrap command frames, Login payload and LoginFail response
+PASS: Java shim and LegacyBotRuntime compile with javac against JAR
+PASS: Kotlin parser syntax for Android Kotlin files
+PASS: v0.2 Go Core / Kotlin network probe & importer tests (see TEST_RESULTS.txt)
+
+NOT RUN: Android Gradle build / dex / APK (Android SDK & Gradle unavailable)
+NOT RUN: Android device/emulator start/stop/foreground lifecycle
+NOT RUN: real server login and Auto Farm/Fishing/Teacher/Diamond validation
+NOTICE: Solver external service blocked intentionally; not tested

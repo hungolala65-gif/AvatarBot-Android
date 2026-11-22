@@ -1,0 +1,10 @@
+AvatarBot Android Native v0.15 — local offline verification (2026-11-21)
+PASS: Java ME JAR legacy integration, mock LoginSuccess/LoginFail, TCP/SOCKS5 and service cancellation policies
+PASS: AdvancedSetupV15Test checks all four mode mappings and out-of-range values
+PASS: JVM AutoOptions JSON round-trip, v0.14 migration defaults, range checks and per-account settings copies
+PASS: Go test -race ./..., go vet ./..., Android arm64 compile check
+PASS: Kotlin AccountImporter, GameCities, DiagnosticRedactor, network probe + SOCKS5
+PASS: Kotlin PSI source parser (11 .kt app files)
+NOT RUN: Full Gradle assembleDebug (Android SDK/Gradle absent); APK install/device test
+NOT RUN: Real game login or live automation; no account credentials handled
+NOTICE: A first combined offline run was stopped by environment time limit during Kotlin tests; the individual remaining steps were rerun and passed.

@@ -1,0 +1,23 @@
+ok  	avatarbot/mobilecore	(cached)
+ok  	avatarbot/mobilecore/protocol	(cached)
+PASS: AccountImporter 8 checks
+PASS: diagnostics redaction for usernames, passwords, proxy and tokens
+PASS: Kotlin TCP direct, invalid endpoint and SOCKS5 username/password
+PASS: Kotlin PSI syntax parsed 8 app source files (semantic Gradle build still required)
+PASS 44 offline assertions
+PASS: JAR bootstrap (4 packet commands), login payload & LoginFail response on mock server
+PASS: login-only probe checks LoginFail and LoginSuccess without starting automation
+PASS 8 RMS persistence assertions
+PASS: start reservation, stop cancellation, live socket close and connect denial
+PASS: JAR mode flags and no surprise Farm transitions in Fish/Diamond modes
+PASS: 32 Java ME task-flag combinations
+PASS: retry budget, manual stop, and bounded backoff
+PASS: offline wait, 30-minute TTL, cancellation, retry budget
+PASS: probe isolated per credentials/server; network state cancel
+PASS: seed modes preferred, harvest_replay and off mapped to JAR
+PASS: advanced JAR mode config, opt-in sales, safe defaults, and unsupported Farm flags
+PASS: configurable cycle interval (JAR Config.loopDelayMs)
+PASS: async launch cancellation, stale ticket rejection, clean Stop and sanitized failure
+PASS: Stop interrupts blocked SOCKS5 authentication handshake
+PASS: Java ME headless integration tested offline
+PASS: all available offline checks completed

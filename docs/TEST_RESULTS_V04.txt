@@ -1,0 +1,20 @@
+AvatarBot Android Native v0.4 - offline verification
+Date: 2026-11-18
+
+PASS  go test -race ./...        (go-mobilecore)
+PASS  go vet ./...              (go-mobilecore)
+PASS  CGO_ENABLED=0 GOOS=android GOARCH=arm64 go build ./...
+PASS  Kotlin AccountImporter 8 checks
+PASS  Kotlin TCP direct, negative endpoint and SOCKS5 auth tests
+PASS  Kotlin PSI syntax for 7 Android .kt source files
+PASS  44 legacy JAR offline assertions (Config/Cmd/Packet/handshake/TCP/SOCKS5)
+PASS  JAR real connectLogin flow against local mock server: 4 bootstrap packets, Login, LoginFail
+PASS  RMS persistent snapshot 8 assertions (credentials remain RAM-only, roundtrip, corruption)
+PASS  JVM start reservation & cancel; network socket close when revoked
+PASS  4 modes JAR Config mapping; Fishing/Diamond do not automatically invoke Farm
+PASS  Headless core 50 class files identical byte-for-byte to their user-uploaded source JAR
+
+NOT RUN: Android Gradle build / DEX / APK (Android SDK / Gradle unavailable)
+NOT RUN: Android phone/emulator + Android Keystore encryption actual runtime
+NOT RUN: live game server login and any 4 Auto modes in production
+NOT RUN: external CAPTCHA solver; deliberately blocked
