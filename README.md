@@ -1,35 +1,22 @@
-# AvatarBot Android v0.17 — APK debug build
+# AvatarBot Android — development toward release
 
-**Build status:** GitHub Actions run [#2](https://github.com/hungolala65-gif/AvatarBot-Android/actions/runs/44916495354) completed successfully on 2026-11-21.
+**Latest validated Android build:** v0.18.0, **debug/testing only**.
 
-## Source
+- [Complete, inspectable Kotlin / Java / Go sources on the `source-v0.18` branch](https://github.com/hungolala65-gif/AvatarBot-Android/tree/source-v0.18)
+- [v0.18 Android build + unit tests + APK artifact](https://github.com/hungolala65-gif/AvatarBot-Android/actions/runs/44968251636)
+- [v0.18 release gates and open limitations](https://github.com/hungolala65-gif/AvatarBot-Android/blob/source-v0.18/docs/RELEASE_GATES_V018.md)
+- [v0.18 changes](https://github.com/hungolala65-gif/AvatarBot-Android/blob/source-v0.18/docs/CHANGELOG_V018.md)
 
-- Source ZIP: `AvatarBot_Android_Native_v0.17_AuthGuard_Source.zip`
-- SHA-256 of built APK (`app-debug.apk`): `474afddff74d9d8ff3e86aa1160164dd58e77816fde087e4764123f2d989ae18`
-- Minimum Android version: Android 8.0 / API 26 (`minSdk = 26`)
-- Application ID: `com.avatarbot.mobile`
-- Version: `0.17.0`
+## Reproducible debug build
 
-## Download and install
+1. The workflow checks out this repository and extracts the original v0.17 source ZIP.
+2. It applies the tracked patch at `patches/v0.18.patch.zlib.b64`.
+3. It runs Java ME offline tests, per-account setup persistence tests, Go tests, Android Gradle unit tests and `assembleDebug`.
+4. It checks the APK ZIP, verifies its debug signature, and uploads **APK + fully patched source** as an Actions artifact.
 
-1. Open the successful [GitHub Actions build](https://github.com/hungolala65-gif/AvatarBot-Android/actions/runs/44916495354).
-2. Under **Artifacts**, download `avatarbot-v017-debug-apk` (requires GitHub sign-in; retained for 14 days).
-3. Extract the artifact ZIP and install `app-debug.apk` on an Android device.
-4. Verify the file's SHA-256 hash if possible.
+Latest validated APK SHA-256:
+`33054226cdab8efd016efec50576119313571ac306c74bcb6bac8c4301754e23`
 
-## What was verified
+The user-supplied Windows/Linux AvatarBot PC archive contains **compiled binaries, not Go source code**; the independent Android application uses Java ME JAR logic and Android adapters. It is **not feature-equivalent to the PC**. Not yet validated: live-game actions, concurrent accounts, 8–24 hour unattended execution, release keystore signing and store policy. Worker running or LoginSuccess does **not** imply completed gameplay tasks.
 
-- The source ZIP extracted successfully.
-- Offline Java ME / Go test suites completed.
-- Android SDK 35 / Gradle compiled `assembleDebug` successfully.
-- The artifact was uploaded successfully; the resulting APK passed ZIP integrity and checksum checks.
-
-**Not yet verified:** successful login to the live game server, real Farm/Fishing/Teacher/Diamond game actions, multi-account operation, or extended 24-hour runtime. This is a **debug/test build**, not a release build.
-
-## Privacy and safety
-
-The repository is currently **public**. Do not commit any real game account credentials, logs, API keys, or other personal data. Review ownership/redistribution rights for the included legacy Java ME library.
-
-## Rebuild
-
-Replace the source ZIP at the repository root with a tested updated archive to trigger the workflow; or use **Actions → Build AvatarBot Android v0.17 from ZIP → Run workflow**.
+**Privacy:** This repository is public. Do not commit game credentials, account exports, private logs or keystore credentials. Redistribution rights for supplied binaries/JAR must be reviewed before distribution.
